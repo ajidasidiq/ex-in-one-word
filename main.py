@@ -27,6 +27,10 @@ def main() -> None:
     assert WORD == WORD.strip(), "word has surrounding whitespace"
     assert not any(ch.isspace() for ch in WORD), "word must be a single word"
     assert WORD.isalpha(), "word must be letters only"
+    # Plain ASCII letters only: a look-alike Unicode letter would pass
+    # isalpha but fail a plain-text gate, so reject anything non-ASCII.
+    assert WORD.isascii(), "word must be plain ASCII letters"
+    assert not any(ord(ch) < 32 or ord(ch) == 127 for ch in WORD), "word holds a control character"
 
     OUT.parent.mkdir(parents=True, exist_ok=True)
     # No trailing newline: the file is exactly the word, byte for byte.
